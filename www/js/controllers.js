@@ -67,7 +67,113 @@ angular.module('starter.controllers', [])
     $scope.table = {
       code: null
     };
+
     $scope.data = {};
+    $scope.elems = [];
+
+    var diameter = document.getElementById('search-bar').offsetWidth;
+
+    var svg = d3.select('#chart').append('svg')
+      .attr('width', diameter)
+      .attr('height', diameter * 1.2);
+
+    var bubble = d3.layout.pack()
+      .size([diameter, diameter])
+      .value(function (d) {
+        return d.size;
+      }) // new data is loaded to bubble layout
+      .padding(3);
+
+
+    function drawBubbles(m) {
+
+      // generate data with calculated layout values
+      var nodes = bubble.nodes({children: m})
+        .filter(function (d) {
+          return !d.children;
+        }); // filter out the outer bubble
+
+      // assign new data to existing DOM
+      var vis = svg.selectAll('g')
+        .data(nodes, function (d) {
+          return d.name;
+        });
+
+      // enter data -> remove, so non-exist selections for upcoming data won't stay -> enter new data -> ...
+
+      // To chain transitions,
+      // create the transition on the updating elements before the entering elements
+      // because enter.append merges entering elements into the update selection
+
+      var duration = 300;
+      var delay = 0;
+
+      // update - this is created before enter.append. it only applies to updating nodes.
+      vis.transition()
+        .duration(duration)
+        .delay(function (d, i) {
+          delay = i * 7;
+          return delay;
+        })
+        .attr('transform', function (d) {
+          return 'translate(' + d.x + ',' + d.y + ')';
+        })
+        .attr('r', function (d) {
+          return d.r;
+        })
+        .style('opacity', 1); // force to 1, so they don't get stuck below 1 at enter()
+
+      // enter - only applies to incoming elements (once emptying data)
+      var nodez = vis.enter().append('g').attr('transform', function (d) {
+        return 'translate(' + d.x + ',' + d.y + ')';
+      });
+      nodez.on("click", function(d) { $scope.editAmount(d.userId);});
+      var circle = nodez.append('circle')
+
+        .attr('r', function (d) {
+          return 40;
+        })
+        .attr('fill', function (d) {
+          return d.color;
+        });
+      nodez.append("text")
+        .attr("text-anchor", "middle")
+        .attr('dy', -10)
+        .text(function (d) {
+          return d.name
+        }).attr('fill', '#FFF')
+      nodez.append("text")
+        .attr("text-anchor", "middle")
+        .attr('font-weight', 'bolder')
+        .attr('dy', 10)
+        .text(function (d) {
+          return d.amount
+        }).attr('fill', '#FFF')
+        .style('opacity', 0)
+        .transition()
+        .duration(duration * 1.2)
+        .style('opacity', 1);
+
+
+      // exit
+      vis.exit()
+        .transition()
+        .duration(duration + delay)
+        .style('opacity', 0)
+        .remove();
+    }
+
+    $scope.addElem = function () {
+      $scope.elems.push({
+        name: 'asd' + Math.random(),
+        size: 22,
+        color: "#" + ((1 << 24) * Math.random() | 0).toString(16),
+        amount: '40TL'
+      });
+      console.log($scope.elems);
+      drawBubbles($scope.elems);
+
+    };
 
     $scope.enterCode = function () {
       DashboardService.getTable($scope.code).then(function (response) {
