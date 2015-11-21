@@ -1,6 +1,23 @@
 angular.module('starter.services', [])
 
-  .service('AuthenticationService', function ($http, $cookies) {
+  .factory('$localStorage', ['$window', function($window) {
+    return {
+      set: function(key, value) {
+        $window.localStorage[key] = value;
+      },
+      get: function(key, defaultValue) {
+        return $window.localStorage[key] || defaultValue;
+      },
+      setObject: function(key, value) {
+        $window.localStorage[key] = JSON.stringify(value);
+      },
+      getObject: function(key) {
+        return JSON.parse($window.localStorage[key] || '{}');
+      }
+    }
+  }])
+
+  .service('AuthenticationService', function ($http, $localStorage) {
     var currentUser = null;
     var authorization = null;
     this.signIn = function (user) {
@@ -42,45 +59,88 @@ angular.module('starter.services', [])
 
     this.setAuthorization = function (auth) {
       this.authorization = auth;
-      $cookies.put("gh-auth", auth);
+      window.localStorage["gh-auth"] = auth;
+      $http.defaults.headers.common['Authorization'] = "Bearer: " + window.localStorage["gh-auth"].replace(/^"(.*)"$/, '$1');
     };
 
     this.getAuthorization = function () {
       if (!this.authorization) {
-        this.authorization = $cookies.get("gh-auth");
+        this.authorization = window.localStorage["gh-auth"];
       }
       return this.authorization;
     };
 
     this.logout = function () {
-      $cookies.remove("gh-auth");
+      window.localStorage["gh-auth"] = null;
     };
   })
 
   .service('DashboardService', function ($http) {
-
+    var data = null;
     this.getTable = function (code) {
-      return $http({
-        url: '', //TODO
-        method: 'post',
-        params: {
-          code: code
-        }
-      })
+      return $http.get(window.backendUrl + 'secure/getBillByUserCode?code=' + code.toUpperCase());
     };
 
-    this.addUserToTable = function (userId) {
+    this.setData = function (data) {
+      this.data = data;
+    };
+
+    this.getData = function () {
+      return this.data;
+    };
+
+    this.addUserToTable = function (userId, code) {
       return $http({
-        url: '', //TOOD
+        url: window.backendUrl + 'secure/addContributerToBillByBillCode',
         method: 'POST',
         params: {
-          userId: userId
+          customerid: userId,
+          userCode: code.toUpperCase()
         }
       });
     };
 
     this.searchUser = function (query) {
       return $http.get(window.backendUrl + 'secure/searchUser?username=' + query);
+    };
+
+    this.saveCreditCard = function (number, month, year, cvc2) {
+      return $http({
+        url: window.backendUrl + 'secure/addCreditCard',
+        method: 'post',
+        params: {
+          number: number,
+          expireMonth: month,
+          expireYear: year,
+          cvv: cvc2
+        }
+      });
+    };
+
+    this.getCreditCardList = function() {
+      return $http.get(window.backendUrl + 'secure/getCreditCards');
+    };
+
+    this.setAmount = function(contributionId, amount) {
+      return $http({
+        url: window.backendUrl + 'secure/updateContribution',
+        method: 'post',
+        params: {
+          contributionid: contributionId,
+          contribution: amount
+        }
+      });
+    };
+
+    this.makePayment = function(code, creditCardId) {
+      return $http({
+        url: window.backendUrl + 'secure/confirmContributionWithDefinedCreditCard',
+        method: 'post',
+        params: {
+          creditCardid: creditCardId,
+          userCode: code
+        }
+      });
     };
   })
 

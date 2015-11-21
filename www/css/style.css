@@ -276,3 +276,51 @@ items should be rotated by x, minus (sum of angles - 180)2s (for this demo) */
   font-size: 40px;
 
 }
+
+.odesh-input {
+  width: 90vw;
+  margin: 0 auto;
+  border: 2px solid #009BB6 !important;
+  border-radius: 15px;
+  height: 50px !important;
+  padding-left: 10px !important;
+  color: #009BB6 !important;
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+.odesh-button {
+  width: 90vw !important;
+  border-radius: 15px;
+  margin: 0 auto;
+  border: 2px solid #009BB6;
+  background-color: #009BB6;
+  color: white;
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+.odesh-button-empty {
+  width: 90vw !important;
+  border-radius: 15px;
+  margin: 0 auto;
+  border: 2px solid #009BB6;
+  color: #009BB6;
+  background-color: white;
+}
+
+input::-webkit-input-placeholder {
+  padding-left: 10px;
+  color: rgba(0, 155, 182, 0.51);
+}
+
+.odesh-code-button {
+  border-radius: 0 15px 15px 0;
+  height: 50px;
+  background: #009BB6;
+  border: none;
+  font-size: 35px;
+  color: white;
+  font-weight: bolder;
+  width: 50px;
+}

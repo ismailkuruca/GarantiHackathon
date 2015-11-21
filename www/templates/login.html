@@ -1,21 +1,18 @@
-<ion-view view-title="Giriş Yap">
-  <ion-content>
-    <div class="list">
-      <label class="item item-input">
-        <span class="input-label">Kullanıcı Adı</span>
-        <input type="text" ng-model="user.username">
-      </label>
-      <label class="item item-input">
-        <span class="input-label">Şifre</span>
-        <input type="password" ng-model="user.password">
-      </label>
+<ion-view view-title="Giriş Yap" hide-nav-bar="true">
+  <ion-content has-header="false">
+    <img style="width: 100vw; margin-top: 30px;" src="img/odesh-logo-1.png"/>
+
+    <div class="list" style="margin-bottom: 5px; margin-top: 20px;">
+      <input type="text" ng-model="user.username" placeholder="kullanıcı adı" class="odesh-input">
+      <input type="password" ng-model="user.password" placeholder="şifre" class="odesh-input">
+
     </div>
-    <div class="padding">
-      <button class="button button-block button-positive" ng-click="login()">
-        Giriş Yap
+    <div class="list" style="margin-top: 40px;">
+      <button class="button button-block odesh-button" ng-click="login()">
+        ÜYE GİRİŞİ
       </button>
-      <button class="button button-block button-positive" ng-click="showRegistrationPage()">
-        Kaydol
+      <button class="button button-block odesh-button-empty" ng-click="showRegistrationPage()">
+        ÜYE OL
       </button>
     </div>
   </ion-content>

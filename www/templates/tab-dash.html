@@ -1,23 +1,21 @@
-<ion-view view-title="Dashboard">
-  <ion-content class="padding">
-    <div id="search-bar">
-      <div class="item item-input-inset">
-        <label class="item-input-wrapper" id="search-input">
-          <i class="icon ion-search placeholder-icon"></i>
-          <input type="text" style="width: 100%;" placeholder="Search" ng-model="query" ng-change="searchUser(query)" ng-model-options="{debounce: 500}">
-          <ion-spinner ng-if="searchInProgress" icon="spiral"></ion-spinner>
-        </label>
+<ion-view view-title="Dashboard" hide-nav-bar="true">
+  <ion-content class="padding" has-header="false">
 
+
+    <img style="width: 100vw; margin-top: 30px;" src="img/odesh-logo-1.png"/>
+
+    <div class="list">
+
+      <div class="item item-input-inset" style="border: none !important; margin-top: 10vh;">
+          <input placeholder="ADİSYON KODUNU GİRİNİZ" type="text" ng-model="data.code" class="odesh-input" style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;" placeholder="Kodu Giriniz">
+        <button class="button button-small odesh-code-button" ng-click="enterCode()">
+          <span style="vertical-align: text-top;">></span>
+        </button>
       </div>
 
-      <ion-list ng-if="searchResult.length" style="width: 100%; z-index: 9999; position: fixed;">
-        <div class="item item-avatar" ng-repeat="result in searchResult" ng-click="addUserToTable(result.id)">
-          <img src="http://placehold.it/40x40">
-          <h2>{{result.username}}</h2>
-        </div>
-      </ion-list>
     </div>
-    <button class="button button-stable" ng-click="addElem()">add</button>
-    <section id="chart"></section>
+
+
+
   </ion-content>
 </ion-view>

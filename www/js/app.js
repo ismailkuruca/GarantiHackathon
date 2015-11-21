@@ -22,13 +22,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
   })
 
-  .run(['$http', '$cookies', function ($http, $cookies) {
-    $http.defaults.headers.common['Authorization'] = "Bearer: " + $cookies.get("gh-auth");
+  .run(['$http', '$cookies', function ($http, $localStorage) {
+    if(window.localStorage["gh-auth"]) {
+      $http.defaults.headers.common['Authorization'] = "Bearer: " + window.localStorage["gh-auth"].replace(/^"(.*)"$/, '$1');
+    }
   }])
 
   .
-  config(function ($stateProvider, $urlRouterProvider) {
+  config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
+    $ionicConfigProvider.backButton.previousTitleText(false);
+    $ionicConfigProvider.backButton.text("Geri");
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
@@ -36,51 +40,41 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     $stateProvider
 
       // setup an abstract state for the tabs directive
-      .state('tab', {
-        url: '/tab',
-        abstract: true,
-        templateUrl: 'templates/tabs.html'
-      })
-
       // Each tab has its own nav history stack:
 
-      .state('tab.dash', {
+      .state('dash', {
         url: '/dash',
-        views: {
-          'tab-dash': {
-            templateUrl: 'templates/tab-dash.html',
-            controller: 'DashboardController'
-          }
-        }
+        templateUrl: 'templates/tab-dash.html',
+        controller: 'DashboardController'
       })
 
-      .state('tab.settings', {
+      .state('table', {
+        url: '/table/:code',
+        templateUrl: 'templates/table.html',
+        controller: 'TableController'
+      })
+
+      .state('settlement', {
+        url: '/settlement/:code',
+        templateUrl: 'templates/settlement.html',
+        controller: 'SettlementController'
+      })
+
+      .state('settings', {
         url: '/settings',
-        views: {
-          'tab-settings': {
-            templateUrl: 'templates/tab-settings.html',
-            controller: 'SettingsController'
-          }
-        }
+        templateUrl: 'templates/tab-settings.html',
+        controller: 'SettingsController'
       })
-      .state('tab.history', {
+      .state('history', {
         url: '/history',
-        views: {
-          'tab-history': {
-            templateUrl: 'templates/tab-history.html',
-            controller: 'HistoryController'
-          }
-        }
+        templateUrl: 'templates/tab-history.html',
+        controller: 'HistoryController'
       })
 
-      .state('tab.account', {
+      .state('account', {
         url: '/account',
-        views: {
-          'tab-account': {
-            templateUrl: 'templates/tab-account.html',
-            controller: 'AccountCtrl'
-          }
-        }
+        templateUrl: 'templates/tab-account.html',
+        controller: 'AccountCtrl'
       })
 
       .state('register', {

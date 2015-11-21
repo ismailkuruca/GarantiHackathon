@@ -1,0 +1,40 @@
+<ion-view view-title="{{seller}}">
+  <ion-content class="padding">
+
+    <div id="search-bar">
+      <label class="item-input-wrapper" id="search-input" style="background-color: #009bb6; color: white;">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="text" style="background: #009bb6; color:white;width: 100%;" placeholder="Search" ng-model="query"
+               ng-change="searchUser(query)"
+               ng-model-options="{debounce: 500}">
+        <ion-spinner ng-if="searchInProgress" icon="spiral"></ion-spinner>
+      </label>
+
+
+      <ion-list ng-if="searchResult.length" style="width: 100%; z-index: 9999; position: fixed;">
+        <div class="item item-avatar" ng-repeat="result in searchResult" ng-click="addUserToTable(result.id)">
+          <img src="http://placehold.it/40x40">
+
+          <h2>{{result.username}}</h2>
+        </div>
+      </ion-list>
+    </div>
+    <div class="row" style="padding: 0 !important;">
+
+      <div class="col col-80">
+        <progress max="100" value="{{percentage}}"></progress>
+      </div>
+      <div class="col col-20">
+        <span style="line-height: 43px; white-space: nowrap;">{{committed}}&#8378;/{{totalAmount}}&#8378;</span>
+      </div>
+    </div>
+    <section id="chart"></section>
+
+    <button class="button button-block odesh-button-empty" ng-click="openModal()">
+      ADİSYON DETAYI
+    </button>
+    <button class="button button-block odesh-button" ng-click="makePayment()">
+      TUTARI ONAYLA
+    </button>
+  </ion-content>
+</ion-view>
