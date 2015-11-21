@@ -1,0 +1,22 @@
+<ion-view view-title="Giriş Yap">
+  <ion-content>
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">Kullanıcı Adı</span>
+        <input type="text" ng-model="user.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Şifre</span>
+        <input type="password" ng-model="user.password">
+      </label>
+    </div>
+    <div class="padding">
+      <button class="button button-block button-positive" ng-click="login()">
+        Giriş Yap
+      </button>
+      <button class="button button-block button-positive" ng-click="showRegistrationPage()">
+        Kaydol
+      </button>
+    </div>
+  </ion-content>
+</ion-view>
