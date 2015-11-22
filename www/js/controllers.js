@@ -73,6 +73,7 @@ angular.module('starter.controllers', [])
     $scope.searchResult = null;
     $scope.totalAmount = 0;
     $scope.committed = 0;
+    $scope.ownAmount = 0;
 
     $scope.table = {
       code: null
@@ -194,6 +195,9 @@ angular.module('starter.controllers', [])
       $scope.committed = 0;
       for (var i = 0; i < participants.length; i++) {
         var par = participants[i];
+        if(par[1].customer.id == currentUser.id) {
+          $scope.ownAmount = par[0].contribution.contrubution;
+        }
         $scope.committed += par[0].contribution.contrubution;
         $scope.elems.push({
           name: par[1].customer.id == currentUser.id ? "BEN" : par[1].customer.username,
@@ -325,9 +329,11 @@ angular.module('starter.controllers', [])
             number: 'Yeni kart tanımla'
           });
           paymentPopup = $ionicPopup.show({
-            template: '<div class="row"><label class="item item-input item-select" style="max-width: 100%; width: 100%;"><select style="position: initial; font-size: 10px; padding: 0;" ng-model="data.selectedCard" ng-value="" ng-options="card.id as card.number for card in data.creditCardList"><option value="">Ödeme yöntemi seçiniz</option></select></label></div></div>',
-            title: 'Yeni miktarı giriniz',
-            subTitle: 'Örn. 10.21',
+            template: '<div class="row"><label class="item item-input item-select" style="max-width: 100%; width: 100%;"><select style="position: initial; font-size: 10px; padding: 0;" ng-model="data.selectedCard" ng-value="" ng-options="card.id as card.number for card in data.creditCardList"><option value="">Ödeme yöntemi seçiniz</option></select></label></div></div>' +
+                      '<div class="row" style="font-size: 14px;color: #009bb6;"><div class="col col-50">Tutar</div><div class="col col-50" style="text-align: right;border-bottom: 1px solid #009bb6;">{{ownAmount}}₺</div></div>' +
+                      '<div class="row" style="font-size: 12px;color: #009bb6;border-bottom: 1px solid #009bb6;"><div class="col col-50">İşlem Tutarı</div><div class="col col-50" style="text-align: right;">0.05₺</div></div>' +
+                      '<div class="row" style="font-size: 16px;color: #009bb6;margin-top: 5px;"><div class="col col-50">Toplam Tutar</div><div class="col col-50" style="text-align: right; ">{{ownAmount + 0.05}}₺</div></div>',
+            title: 'Ödeme Özeti',
             scope: $scope,
             buttons: [
               {text: 'İptal'},
@@ -344,7 +350,7 @@ angular.module('starter.controllers', [])
                       $ionicLoading.hide();
                       response = response.data;
                       if (response.success) {
-                        //TODO
+                        $state.go('settlement', {code: $stateParams.code});
                       } else {
                         $cordovaToast.showLongBottom(response.message);
                       }
